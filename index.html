@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Jogo de Roleta</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #0b0b0b;
+        color: white;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 400px;
+        margin: auto;
+        padding: 20px;
+        background: #1b1b1b;
+        border-radius: 10px;
+        box-shadow: 0 0 10px #000;
+    }
+
+    select, input {
+        width: 90%;
+        padding: 10px;
+        margin: 8px 0;
+        border-radius: 5px;
+        border: none;
+    }
+
+    button {
+        background: red;
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    button:hover {
+        background: #b50000;
+    }
+
+    #resultado {
+        margin-top: 20px;
+        font-size: 20px;
+        font-weight: bold;
+    }
+</style>
+</head>
+<body>
+
+<h1>🎰 Jogo de Roleta</h1>
+
+<div class="container">
+    <label>Tipo de aposta:</label>
+    <select id="tipoAposta" onchange="mostrarOpcoes()">
+        <option value="numero">Número exato (35x)</option>
+        <option value="cor">Vermelho / Preto (2x)</op
