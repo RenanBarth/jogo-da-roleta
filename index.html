@@ -2,18 +2,18 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Google Snake Avançado</title>
+<title>Google Snake HTML</title>
 <style>
     body {
         background: #111;
         display: flex;
         justify-content: center;
         align-items: center;
-        flex-direction: column;
         height: 100vh;
         margin: 0;
         color: white;
         font-family: Arial;
+        flex-direction: column;
         user-select: none;
     }
 
@@ -21,67 +21,21 @@
         background: #000;
         border: 3px solid #3aff3a;
         box-shadow: 0 0 20px #3aff3a;
-        margin-top: 10px;
-    }
-
-    #config {
-        display: flex;
-        gap: 15px;
-        margin-bottom: 10px;
-    }
-
-    select {
-        padding: 5px;
-        font-size: 16px;
-        border-radius: 5px;
     }
 
     #score {
         font-size: 24px;
-        margin-top: 10px;
+        margin-bottom: 10px;
     }
 </style>
 </head>
 <body>
 
-<h1>🐍 Google Snake Avançado</h1>
-
-<!-- CONFIGURAÇÕES -->
-<div id="config">
-    <div>
-        <label>🎨 Skin:</label>
-        <select id="skin">
-            <option value="#00FF00">Verde</option>
-            <option value="#00BFFF">Azul</option>
-            <option value="#FF1493">Rosa</option>
-            <option value="#FFD700">Dourado</option>
-            <option value="#FF4500">Laranja</option>
-        </select>
-    </div>
-
-    <div>
-        <label>⚡ Velocidade:</label>
-        <select id="velocidade">
-            <option value="150">Lento</option>
-            <option value="100" selected>Normal</option>
-            <option value="60">Rápido</option>
-        </select>
-    </div>
-
-    <div>
-        <label>🟢 Modo:</label>
-        <select id="modo">
-            <option value="normal">Normal</option>
-            <option value="infinito">Infinito (atravessa paredes)</option>
-        </select>
-    </div>
-</div>
-
 <div id="score">Pontuação: 0</div>
 <canvas id="game" width="400" height="400"></canvas>
 
 <script>
-// ======= CONFIGURAÇÕES =======
+// Configurações iniciais
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 const box = 20;
@@ -90,10 +44,9 @@ let snake = [{ x: 200, y: 200 }];
 let direction = "right";
 let score = 0;
 
+// Gera comida aleatória
 let food = gerarComida();
-let intervalo = setInterval(gameLoop, 100);
 
-// ======= COMIDA =======
 function gerarComida() {
     return {
         x: Math.floor(Math.random() * 20) * box,
@@ -101,7 +54,7 @@ function gerarComida() {
     };
 }
 
-// ======= CONTROLES =======
+// Controle da cobra
 document.addEventListener("keydown", e => {
     if ((e.key === "ArrowUp" || e.key === "w") && direction !== "down")
         direction = "up";
@@ -113,13 +66,7 @@ document.addEventListener("keydown", e => {
         direction = "right";
 });
 
-// ======= MUDAR VELOCIDADE =======
-document.getElementById("velocidade").addEventListener("change", () => {
-    clearInterval(intervalo);
-    intervalo = setInterval(gameLoop, parseInt(document.getElementById("velocidade").value));
-});
-
-// ======= LOOP PRINCIPAL =======
+// Loop principal do jogo
 function gameLoop() {
     ctx.clearRect(0, 0, 400, 400);
 
@@ -127,31 +74,19 @@ function gameLoop() {
     ctx.fillStyle = "red";
     ctx.fillRect(food.x, food.y, box, box);
 
-    // Movimento da cabeça
+    // Movimento
     let head = { ...snake[0] };
-
     if (direction === "right") head.x += box;
     if (direction === "left") head.x -= box;
     if (direction === "up") head.y -= box;
     if (direction === "down") head.y += box;
 
-    let modo = document.getElementById("modo").value;
-
-    // ======= MODO INFINITO =======
-    if (modo === "infinito") {
-        if (head.x < 0) head.x = 380;
-        if (head.x >= 400) head.x = 0;
-        if (head.y < 0) head.y = 380;
-        if (head.y >= 400) head.y = 0;
-    } 
-    // ======= MODO NORMAL =======
-    else {
-        if (head.x < 0 || head.x >= 400 || head.y < 0 || head.y >= 400) {
-            return gameOver();
-        }
+    // Colisão com parede
+    if (head.x < 0 || head.x >= 400 || head.y < 0 || head.y >= 400) {
+        return gameOver();
     }
 
-    // ======= COLISÃO COM O CORPO =======
+    // Colisão com o próprio corpo
     for (let i = 0; i < snake.length; i++) {
         if (head.x === snake[i].x && head.y === snake[i].y) {
             return gameOver();
@@ -160,7 +95,7 @@ function gameLoop() {
 
     snake.unshift(head);
 
-    // ======= COMER COMIDA =======
+    // Comer comida
     if (head.x === food.x && head.y === food.y) {
         score += 10;
         document.getElementById("score").innerText = "Pontuação: " + score;
@@ -169,21 +104,20 @@ function gameLoop() {
         snake.pop();
     }
 
-    // ======= SKINS =======
-    const corCobra = document.getElementById("skin").value;
-    ctx.fillStyle = corCobra;
-
     // Desenhar cobra
-    snake.forEach(part => {
+    ctx.fillStyle = "#00FF00";
+    snake.forEach((part, index) => {
         ctx.fillRect(part.x, part.y, box, box);
     });
 }
 
-// ======= GAME OVER =======
 function gameOver() {
     alert("💀 Fim de jogo!\nPontuação final: " + score);
     document.location.reload();
 }
+
+// Rodar jogo a cada 100ms
+setInterval(gameLoop, 100);
 </script>
 
 </body>
